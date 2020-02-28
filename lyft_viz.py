@@ -2,9 +2,9 @@ import argparse
 import psutil
 import numpy as np
 from pyquaternion import Quaternion
-from lyft_dataset_sdk.lyftdataset import LyftDataset
-from lyft_dataset_sdk.utils.data_classes import LidarPointCloud
-from lyft_dataset_sdk.utils.geometry_utils import view_points
+from nuscenes.nuscenes import NuScenes
+from nuscenes.utils.data_classes import LidarPointCloud
+from nuscenes.utils.geometry_utils import view_points
 import mayavi.mlab as mlab
 from utils import draw_lidar, draw_gt_boxes3d
 
@@ -19,7 +19,7 @@ def get_lidar_points(lyftdata, lidar_token):
     chan = sd_record["channel"]
     ref_chan = "LIDAR_TOP"
     pc, times = LidarPointCloud.from_file_multisweep(
-        lyftdata, sample_rec, chan, ref_chan, num_sweeps=1
+        lyftdata, sample_rec, chan, ref_chan, nsweeps=1
     )
     # Compute transformation matrices for lidar point cloud
     cs_record = lyftdata.get("calibrated_sensor", sd_record["calibrated_sensor_token"])
@@ -45,11 +45,11 @@ def get_lidar_points(lyftdata, lidar_token):
 def plot_lidar_with_depth(lyftdata, sample):
     '''plot given sample'''
 
-    print(f'Plotting sample, token: {sample["token"]}')
+    print('Plotting sample, token: {sample["token"]}')
     lidar_token = sample["data"]["LIDAR_TOP"]
     pc = get_lidar_points(lyftdata, lidar_token)
     _, boxes, _ = lyftdata.get_sample_data(
-        lidar_token, flat_vehicle_coordinates=True
+        lidar_token, use_flat_vehicle_coordinates=True
     )
     fig = mlab.figure(figure=None, bgcolor=(0,0,0),
                       fgcolor=None, engine=None, size=(1000, 500))
@@ -107,7 +107,7 @@ if __name__=='__main__':
     dataroot = Path(args.dataroot)
     json_path = dataroot / 'data/'
     print('Loading dataset with Lyft SDK ...')
-    lyftdata = LyftDataset(data_path=str(dataroot), json_path=str(json_path), verbose=True)
+    lyftdata = NuScenes(version='v1.0-mini', dataroot='D:/mini', verbose=True)
     print('Done!, starting 3d visualization ...')
 
     if args.scene:
