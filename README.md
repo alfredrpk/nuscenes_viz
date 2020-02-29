@@ -1,6 +1,10 @@
 # NuScenes Visualization tool
 
-This is [mayavi](https://github.com/enthought/mayavi) based 3D visualization tool for NuScenes dataset. As of now, it supports lyft's level 5 dataset, I'll extend support for actual nuscenes dataset later on.
+This is a fork of nuscenes_viz to work exclusively with the nuscenes dataset. 
+
+The original repository's README is as follows:
+
+This is [mayavi](https://github.com/enthought/mayavi) based 3D visualization tool for NuScenes dataset.
 
 ## Demo
 
